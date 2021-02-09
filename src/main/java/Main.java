@@ -3,9 +3,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 
 import org.apache.maven.shared.invoker.*;
 import org.eclipse.jetty.server.Server;
@@ -14,6 +17,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.json.JSONObject;
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -38,6 +42,27 @@ public class Main extends AbstractHandler
         // for example
         // 1st clone your repository
         // 2nd compile the code
+        /*
+        Enumeration<String> temp = request.getHeaderNames();
+        while(temp.hasMoreElements()){
+            System.out.println(request.getHeaders(temp.nextElement()));
+        }
+         */
+
+        BufferedReader reader = request.getReader();
+        String row, text = "";
+        while((row = reader.readLine()) != null){
+            text += row;
+        }
+        reader.close();
+
+        System.out.println(text);
+        JSONObject jason = new JSONObject(text);
+        String uri = jason.getJSONObject("repository").getString("clone_url");
+        System.out.println(uri);
+        String bnarch = jason.getString("ref");
+        System.out.println(bnarch);
+
         cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
         build("clone_test");
         removeDirectory(new File("clone_test"));
