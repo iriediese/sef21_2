@@ -14,8 +14,6 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.errors.TransportException;
-import sun.rmi.transport.Transport;
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -79,7 +77,7 @@ public class Main extends AbstractHandler
         request.setPomFile (new File("pom.xml"));
         request.setGoals (Collections.singletonList( "install" ));
         Invoker invoker = new DefaultInvoker();
-        invoker.setMavenHome(new File("/usr/"));
+        invoker.setMavenHome(new File("apache-maven-3.6.3"));
         InvocationResult result;
         try {
             result = invoker.execute(request);
