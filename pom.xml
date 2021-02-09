@@ -13,6 +13,11 @@
             <artifactId>jetty-server</artifactId>
             <version>9.4.36.v20210114</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-invoker-plugin</artifactId>
+            <version>3.2.1</version>
+        </dependency>
     </dependencies>
 
     <properties>
