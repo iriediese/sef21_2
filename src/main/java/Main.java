@@ -40,10 +40,20 @@ public class Main extends AbstractHandler
         // 2nd compile the code
         cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
         build("clone_test");
+        removeDirectory(new File("clone_test"));
 
         response.getWriter().println("CI job done");
     }
 
+    boolean removeDirectory(File directory) {
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                removeDirectory(file);
+            }
+        }
+        return directory.delete();
+    }
 
     /**
      * Method that clones a Git repository into a given directory.
