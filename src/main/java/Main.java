@@ -2,11 +2,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+
+import org.eclipse.jgit.api.CloneCommand;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.errors.TransportException;
+import sun.rmi.transport.Transport;
 
 /**
  Skeleton of a ContinuousIntegrationServer which acts as webhook
@@ -34,15 +40,26 @@ public class Main extends AbstractHandler
         response.getWriter().println("CI job done");
     }
 
-    public void cloneRepo(){
-        /**
-         * write the funciton that clones
-         * the
-         * reposityory
-         * right
-         * here
-         * please
-         */
+    /**
+     * Method that clones a Git repository into a given directory.
+     * @param uri Addres to the repository to be cloned.
+     * @param branchName Name of the branch to be cloned.
+     * @param directory Location to store the repo.
+     */
+    public void cloneRepo(String uri, String branchName, String directory){
+
+        CloneCommand cmd = Git.cloneRepository();
+        cmd.setDirectory( new File(directory));
+        cmd.setURI(uri);
+        if (branchName != null)
+            cmd.setBranch(branchName);
+
+        try {
+            Git git = cmd.call();
+            git.close();
+        } catch ( Exception e) {
+           e.printStackTrace();
+        }
     }
 
     public void build(){
