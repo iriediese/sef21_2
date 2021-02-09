@@ -34,6 +34,25 @@ public class Main extends AbstractHandler
         response.getWriter().println("CI job done");
     }
 
+    public void cloneRepo(){
+        /**
+         * write the funciton that clones
+         * the
+         * reposityory
+         * right
+         * here
+         * please
+         */
+    }
+
+    public void build(){
+        /**
+         * write the function that builds
+         * right
+         * here
+         */
+    }
+
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
