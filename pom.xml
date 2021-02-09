@@ -13,6 +13,11 @@
             <artifactId>jetty-server</artifactId>
             <version>9.4.36.v20210114</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.10.0.202012080955-r</version>
+        </dependency>
     </dependencies>
 
     <properties>
