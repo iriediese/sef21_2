@@ -31,12 +31,15 @@ public class Main extends AbstractHandler
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
 
+
         System.out.println(target);
 
         // here you do all the continuous integration tasks
         // for example
         // 1st clone your repository
         // 2nd compile the code
+        cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
+        build("clone_test");
 
         response.getWriter().println("CI job done");
     }
@@ -64,17 +67,15 @@ public class Main extends AbstractHandler
         }
     }
 
-    public static int build(){
+    public static int build(String directory){
 
-        // Create build
         /**
-         * write the function that builds
-         * right
-         * here
+         * Method that uses maven to build a project (containing a pom.xml) in a given directory.
+         * @param directory Location to store the repo.
          */
 
         InvocationRequest request = new DefaultInvocationRequest();
-        request.setPomFile (new File("pom.xml"));
+        request.setPomFile (new File(directory + "/" + "pom.xml"));
         request.setGoals (Collections.singletonList( "install" ));
         Invoker invoker = new DefaultInvoker();
         invoker.setMavenHome(new File("apache-maven-3.6.3"));
@@ -95,9 +96,6 @@ public class Main extends AbstractHandler
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
-        if(build() == 0){
-            System.out.println("compiles");
-        }
 
         Server server = new Server(8080);
         server.setHandler(new Main());
