@@ -1,4 +1,3 @@
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
@@ -6,9 +5,7 @@ import javax.servlet.ServletException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
 
 import org.apache.maven.shared.invoker.*;
 import org.eclipse.jetty.server.Server;
@@ -75,6 +72,7 @@ public class Main extends AbstractHandler
 
         cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
         build("clone_test");
+        test("test", "clone_test");
         removeDirectory(new File("clone_test"));
 
         response.getWriter().println("CI job done");
@@ -90,6 +88,29 @@ public class Main extends AbstractHandler
         return directory.delete();
     }
 
+    /**
+     *
+     * @param phase
+     * @param directory
+     */
+    private int test(String phase, String directory) {
+        InvocationRequest req = new DefaultInvocationRequest();
+        req.setPomFile (new File(directory + "/" + "pom.xml"));
+        req.setGoals (Collections.singletonList( phase ));
+        Invoker invoker = new DefaultInvoker();
+        invoker.setMavenHome(new File("apache-maven-3.6.3"));
+        InvocationResult res;
+        try {
+            res = invoker.execute(req);
+            if (res.getExitCode() != 0) {
+                return res.getExitCode();
+            }
+
+        } catch (MavenInvocationException e) {
+            System.err.println("Integration Test Failed");
+        }
+        return 0;
+    }
     /**
      * Method that clones a Git repository into a given directory.
      * @param uri Addres to the repository to be cloned.
