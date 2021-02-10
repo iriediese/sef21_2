@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 
 import org.apache.maven.shared.invoker.*;
 import org.eclipse.jetty.server.Server;
@@ -20,8 +21,9 @@ import org.json.JSONObject;
  Skeleton of a ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
  */
-public class Main extends AbstractHandler
-{
+public class Main extends AbstractHandler{
+    private RepositoryDetails repositoryDetails = new RepositoryDetails();
+
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -35,17 +37,6 @@ public class Main extends AbstractHandler
 
         System.out.println(target);
 
-        // here you do all the continuous integration tasks
-        // for example
-        // 1st clone your repository
-        // 2nd compile the code
-        /*
-        Enumeration<String> temp = request.getHeaderNames();
-        while(temp.hasMoreElements()){
-            System.out.println(request.getHeaders(temp.nextElement()));
-        }
-         */
-
         BufferedReader reader = request.getReader();
         String row, text = "";
         while((row = reader.readLine()) != null){
@@ -53,25 +44,20 @@ public class Main extends AbstractHandler
         }
         reader.close();
 
+
         System.out.println(text);
         JSONObject jason = new JSONObject(text);
         System.out.println(jason);
-        String uri = jason.getJSONObject("repository").getString("clone_url");
-        System.out.println(uri);
-        String bnarch = jason.getString("ref");
-        System.out.println(bnarch);
-        String email = jason.getJSONObject("pusher").getString("email");
-        System.out.println(email);
-        //String updated_at = jason.getJSONObject("repository").getJSONObject("owner").getString("updated_at");
-        //System.out.println(updated_at);
-        String name = jason.getJSONObject("repository").getString("full_name");
-        System.out.println(name);
-
+        repositoryDetails.setUrl(jason.getJSONObject("repository").getString("clone_url"));
+        repositoryDetails.setBranch(jason.getString("ref"));
+        repositoryDetails.setPusher_email(jason.getJSONObject("pusher").getString("email"));
+        repositoryDetails.setName(jason.getJSONObject("repository").getString("full_name"));
 
         // email, updated_at, repo name, sha
 
         cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
         build("clone_test");
+        repositoryDetails.setDate(new Date().toString());
         test("test", "clone_test");
         removeDirectory(new File("clone_test"));
 
