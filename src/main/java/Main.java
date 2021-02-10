@@ -58,10 +58,20 @@ public class Main extends AbstractHandler
 
         System.out.println(text);
         JSONObject jason = new JSONObject(text);
+        System.out.println(jason);
         String uri = jason.getJSONObject("repository").getString("clone_url");
         System.out.println(uri);
         String bnarch = jason.getString("ref");
         System.out.println(bnarch);
+        String email = jason.getJSONObject("pusher").getString("email");
+        System.out.println(email);
+        //String updated_at = jason.getJSONObject("repository").getJSONObject("owner").getString("updated_at");
+        //System.out.println(updated_at);
+        String name = jason.getJSONObject("repository").getString("full_name");
+        System.out.println(name);
+
+
+        // email, updated_at, repo name, sha
 
         cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
         build("clone_test");
