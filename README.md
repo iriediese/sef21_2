@@ -1,4 +1,4 @@
-# DD2480 CNTINOUS INTEGAETION
+# DD2480 CONTINUOUS INTEGRATION
 
 ### Assignment 2, Group 21
 *Alexander E, Ioana C, Joaquin B Q, Johan H, Theodor M
@@ -8,7 +8,7 @@ The program is a CI server. It's best friends with Travis.
 
 ### Background
 
-This is the second assingment in the course Software Engeneering Fundamentals (DD2480) at KTH Royal Institude of Technology.
+This is the second assignment in the course Software Engineering Fundamentals (DD2480) at KTH Royal Institute of Technology.
 
 ### Tech/Framework used
 
@@ -22,7 +22,7 @@ TODO
 TODO
 
 ### Development history
-We started by creating the code skeleton for the project and a gitignore that got lost. With the provided jetti configuration we split the work and pairprogrammed the compile and clone functionality using the jGit API and Maven Invoker. Afterwards we merged the branches together and did some more stuff. Then we created a mock-up project to test the functionality of the CI server. We also whote tests for the mock-up in order to test that fungtionality aswell. At the same time the e-mail link was written in order for the server to notify the user of the build succes. rest is TODO
+We started by creating the code skeleton for the project and a gitignore that got lost. With the provided Jetty configuration we split the work and pair-programmed the compile and clone functionalities using the jGit API and Maven Invoker. Afterwards we merged the branches together and did some more stuff. Then we created a mock-up project to test the functionality of the CI server. We also whote tests for the mock-up in order to test that functionality as well. At the same time the e-mail link was wrote in order for the server to notify the user of the build success. rest is TODO
 
 ### Pass+ criteria
 TODO
@@ -34,7 +34,8 @@ TODO
 
 * Code Skeleton: Theodor
 * gitignore: Theodor
-* Documentation: EVERYONE!!!
+* JavaDoc and HTML: Ioana 
+* Documentation: everyone
 * Compile: Ioana and Theodor
 * Git request: Alex and Joaquin
 * Mock-up: Theodor
