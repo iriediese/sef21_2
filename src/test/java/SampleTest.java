@@ -8,6 +8,6 @@ public class SampleTest {
     }
     @Test
     public void falseTest(){
-        Assert.assertFalse(1 == 0);
+        Assert.assertTrue(1 == 0);
     }
 }
