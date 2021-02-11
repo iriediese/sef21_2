@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 
+import notification.EmailNotification;
 import org.apache.maven.shared.invoker.*;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -47,6 +48,12 @@ public class Main extends AbstractHandler{
      * Based on the associated repository data provided in the request, this method initiates
      * the tasks related to the CI server: clone repository branch, build and run tests.
      *
+     * A notification email to the author of the commit that triggered the webhook
+     * is sent with the result of the build. If the email address is hidden then the email
+     * will be sent to a default address.
+     *
+     * @see EmailNotification
+     *
      * @param target the target name.
      * @param baseRequest the base request. When request was handled the handled status is set to true.
      * @param request the request that the method handles.
@@ -85,10 +92,16 @@ public class Main extends AbstractHandler{
         cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
         build("clone_test");
         repositoryDetails.setDate(new Date().toString());
-        test("test", "clone_test");
+        int status = test("test", "clone_test");
         removeDirectory(new File("clone_test"));
-
         response.getWriter().println("CI job done");
+        System.out.println("Sending notification email...");
+        EmailNotification emailNotification = new EmailNotification();
+        if (status == 0){
+            emailNotification.send(true, repositoryDetails);
+        } else {
+            emailNotification.send(false, repositoryDetails);
+        }
     }
 
     /**
