@@ -17,18 +17,47 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.json.JSONObject;
 
+
 /**
- Skeleton of a ContinuousIntegrationServer which acts as webhook
- See the Jetty documentation for API documentation of those classes.
+ * Continuous Integration Server which handles the cloning, building,
+ *  test running and user notification tasks, similar to other CI servers
+ *  like Travis and Jenkins.
+ *
+ * A POST request on the provided URL in the webhook is initiated when
+ *  the event which triggers the webhook occurs (in this case the event
+ *  is a commit on any branch and by any user on the repository).
+ *
+ *  For further API documentation of Hetty-related classes see the Jetty documentation.
+ *
+ *  @author Alexander E, Ioana C, Joaquin B Q, Johan H, Theodor M
+ *  @since 2021-02-08
  */
 public class Main extends AbstractHandler{
-    private RepositoryDetails repositoryDetails = new RepositoryDetails();
+    /**
+     * Stores the repository details.
+     * @see RepositoryDetails
+     */
+    public RepositoryDetails repositoryDetails = new RepositoryDetails();
 
+    /**
+     * Handles incoming requests to the Continuous Integration Server, mainly triggered by
+     * the associated webhook. When the subscribed event in the webhook occurs (a commit),
+     * a POST request will be triggered by the webhook.
+     *
+     * Based on the associated repository data provided in the request, this method initiates
+     * the tasks related to the CI server: clone repository branch, build and run tests.
+     *
+     * @param target the target name.
+     * @param baseRequest the base request. When request was handled the handled status is set to true.
+     * @param request the request that the method handles.
+     * @param response the server response for the handled request. The returned status will be set to 200.
+     * @throws IOException if the BufferedReader fails to read the content of the request.
+     */
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
                        HttpServletResponse response)
-            throws IOException, ServletException
+            throws IOException
     {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -53,8 +82,6 @@ public class Main extends AbstractHandler{
         repositoryDetails.setPusher_email(jason.getJSONObject("pusher").getString("email"));
         repositoryDetails.setName(jason.getJSONObject("repository").getString("full_name"));
 
-        // email, updated_at, repo name, sha
-
         cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
         build("clone_test");
         repositoryDetails.setDate(new Date().toString());
@@ -64,6 +91,16 @@ public class Main extends AbstractHandler{
         response.getWriter().println("CI job done");
     }
 
+    /**
+     * Removes the directory and all its files. If the directory is not empty, all its files
+     * will be deleted before the deleting the directory.
+     *
+     * @param directory a file object which contains the path to a directory which will be deleted.
+     *                  If the directory is not empty, its content will be removed prior to
+     *                  deleting the directory itself.
+     * @return true if and only if the directory and all its files are successfully deleted;
+     *         false otherwise
+     */
     boolean removeDirectory(File directory) {
         File[] files = directory.listFiles();
         if (files != null) {
@@ -75,9 +112,22 @@ public class Main extends AbstractHandler{
     }
 
     /**
+     * Executes the test running task on the provided repository.
+     * Since the method uses the maven invoker the files that are considered for execution follow the
+     * standard naming conventions. Namely, all files that contain the keyword "Test" in their name and
+     * contain valid test methods definitions and that are correctly annotated as defined in JUnit4 documentation.
      *
-     * @param phase
-     * @param directory
+     * If the build of the project fails, the test task will not be ran.
+     * The function outputs the execution details on the standard output.
+     *
+     * @param phase String object containing the goal required by the InvocationRequest
+     *              which will be executed. To invoke a test running task the value
+     *              should be equal to "test".
+     * @param directory the relative path to a directory which contains a pom.xml file.
+     *                  This value is required by the invoker to run the test task.
+     * @return the exit code (status) of the test task.
+     *         If the execution succeeds the default return value is 0;
+     *         otherwise the associated exit code is returned.
      */
     private int test(String phase, String directory) {
         InvocationRequest req = new DefaultInvocationRequest();
@@ -98,10 +148,15 @@ public class Main extends AbstractHandler{
         return 0;
     }
     /**
-     * Method that clones a Git repository into a given directory.
-     * @param uri Addres to the repository to be cloned.
-     * @param branchName Name of the branch to be cloned.
-     * @param directory Location to store the repo.
+     * Clones a Git repository available at the uri provided as a parameter into the given directory
+     * and sets the current branch. The method uses the jgit API to set the destination directory
+     * and the current branch and to invoke the clone command.
+     *
+     * @param uri the web address to the repository to be cloned. This corresponds to the specific uri
+     *            required by the "git clone" command.
+     * @param branchName the name of the branch to be cloned. This corresponds to the specific name
+     *                   required by the "--branch" argument.
+     * @param directory the location(path to a directory) where the clone will be stored.
      */
     public void cloneRepo(String uri, String branchName, String directory){
 
@@ -119,13 +174,19 @@ public class Main extends AbstractHandler{
         }
     }
 
+    /**
+     * Executes the build task on the provided repository.
+     * The method uses maven invoker to build the project based on the pom.xml file included in the
+     * root directory of the project.
+     *
+     * @param directory path to the root directory of the repository that is being build.
+     *                  The directory should contain a pom.xml file which is required for the build.
+     * @return the exit code (status) of the build task.
+     *         If the execution succeeds the default return value is 0.
+     *         otherwise it throws an IllegalStateException.
+     * @throws IllegalStateException if the build fails.
+     */
     public static int build(String directory){
-
-        /**
-         * Method that uses maven to build a project (containing a pom.xml) in a given directory.
-         * @param directory Location to store the repo.
-         */
-
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile (new File(directory + "/" + "pom.xml"));
         request.setGoals (Collections.singletonList( "install" ));
@@ -145,7 +206,11 @@ public class Main extends AbstractHandler{
         return 0;
     }
 
-    // used to start the CI server in command line
+    /**
+     * Starts the Continuous Integration Server and waits for requests.
+     * @param args command line arguments.
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception
     {
 
