@@ -1,3 +1,5 @@
+package repository;
+
 /**
  * Repository details class that stores the details for the current repository.
  * Stored details: url, date, branch, pusher email and name.
@@ -9,7 +11,7 @@ public class RepositoryDetails {
     private String url;
     private String date;
     private String branch;
-    private String pusher_email;
+    private String pusherEmail;
     private String name;
 
     /**
@@ -73,21 +75,21 @@ public class RepositoryDetails {
     }
 
     /**
-     * Gets the pusher_email
+     * Gets the pusherEmail
      *
-     * @return a String representing the value of pusher_email
+     * @return a String representing the value of pusherEmail
      */
-    public String getPusher_email() {
-        return pusher_email;
+    public String getPusherEmail() {
+        return pusherEmail;
     }
 
     /**
-     * Sets the pusher_email of the repository.
+     * Sets the pusherEmail of the repository.
      *
-     * @param pusher_email  the pusher_email of the repository
+     * @param pusherEmail  the pusherEmail of the repository
      */
-    public void setPusher_email(String pusher_email) {
-        this.pusher_email = pusher_email;
+    public void setPusherEmail(String pusherEmail) {
+        this.pusherEmail = pusherEmail;
     }
 
     /**

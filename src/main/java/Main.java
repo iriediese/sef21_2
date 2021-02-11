@@ -1,6 +1,5 @@
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +15,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.json.JSONObject;
+import repository.RepositoryDetails;
 
 
 /**
@@ -79,7 +79,7 @@ public class Main extends AbstractHandler{
         System.out.println(jason);
         repositoryDetails.setUrl(jason.getJSONObject("repository").getString("clone_url"));
         repositoryDetails.setBranch(jason.getString("ref"));
-        repositoryDetails.setPusher_email(jason.getJSONObject("pusher").getString("email"));
+        repositoryDetails.setPusherEmail(jason.getJSONObject("pusher").getString("email"));
         repositoryDetails.setName(jason.getJSONObject("repository").getString("full_name"));
 
         cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
