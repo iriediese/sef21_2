@@ -16,7 +16,8 @@ Language: Java 8
 Build tool: Maven 3.6.3 by the CI, Maven 4 for the CI
 
 ### RUN
-TODO
+step 1: mvn compile
+step 2: mvn exec:java -Dexec.mainClass=Main
 
 ### Test
 TODO
