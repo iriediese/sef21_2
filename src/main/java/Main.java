@@ -89,7 +89,7 @@ public class Main extends AbstractHandler{
         repositoryDetails.setPusherEmail(jason.getJSONObject("pusher").getString("email"));
         repositoryDetails.setName(jason.getJSONObject("repository").getString("full_name"));
 
-        cloneRepo("https://github.com/iriediese/sef21_2.git", "development", "clone_test");
+        cloneRepo("https://github.com/iriediese/sef21_2.git", "hello_world", "clone_test");
         build("clone_test");
         repositoryDetails.setDate(new Date().toString());
         int status = test("test", "clone_test");
@@ -202,7 +202,7 @@ public class Main extends AbstractHandler{
     public static int build(String directory){
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile (new File(directory + "/" + "pom.xml"));
-        request.setGoals (Collections.singletonList( "install" ));
+        request.setGoals (Collections.singletonList( "compile" ));
         Invoker invoker = new DefaultInvoker();
         invoker.setMavenHome(new File("apache-maven-3.6.3"));
         InvocationResult result;
