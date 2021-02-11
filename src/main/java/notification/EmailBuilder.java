@@ -54,12 +54,14 @@ public class EmailBuilder {
      * @see RepositoryDetails
      */
     public EmailBuilder(Boolean status, RepositoryDetails repositoryDetails){
-        if (status){
-            this.content = successfulBuild;
-        } else {
-            this.content = unsuccessfulBuild;
+        if (status != null) {
+            if (status) {
+                this.content = successfulBuild;
+            } else {
+                this.content = unsuccessfulBuild;
+            }
+            buildContent(repositoryDetails);
         }
-        buildContent(repositoryDetails);
     }
 
     /**
@@ -70,12 +72,14 @@ public class EmailBuilder {
      *
      * @param repositoryDetails the specified repository details.
      */
-    private void buildContent(RepositoryDetails repositoryDetails){
-        this.content = this.content + element+ "Date: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getDate() + endLi;
-        this.content = this.content + element+ "Repository name: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getName() + endLi;
-        this.content = this.content + element+ "URL: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getUrl() + endLi;
-        this.content = this.content + element+ "Branch: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getBranch() + endLi;
-        this.content = this.content + element+ "Commit by: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getPusherEmail() + endLi;
+    private void buildContent(RepositoryDetails repositoryDetails) {
+        if (repositoryDetails != null) {
+            this.content = this.content + element + "Date: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getDate() + endLi;
+            this.content = this.content + element + "Repository name: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getName() + endLi;
+            this.content = this.content + element + "URL: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getUrl() + endLi;
+            this.content = this.content + element + "Branch: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getBranch() + endLi;
+            this.content = this.content + element + "Commit by: </span> <span style=\"color: black; font-size: 110%;\">" + repositoryDetails.getPusherEmail() + endLi;
+        }
     }
 
     /**
