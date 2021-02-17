@@ -27,7 +27,7 @@ We started by creating the code skeleton for the project. With the provided Jett
 Firstly, over 90% of our commits are referencing an issue. Additionally, the implementation of the email notification system is noteworthy (confirmed to fulfill P7). It makes use of dynamically creating HTML content that is passed as the body of the email. It contains the build status (green / red light), the date, repository name and URL of the branch where the commit was made, and the committer's email address. The recipient of the email is the committer. However, if the committer's email address is private, the email will be sent to a default address. 
 
 ### Contribution
-* Code Skeleton: Theodor
+* Code Skeleton: Theodor, Johan
 * gitignore: Theodor, and when it got lost, Alex
 * JavaDoc and HTML: Ioana 
 * Documentation: everyone
@@ -37,4 +37,4 @@ Firstly, over 90% of our commits are referencing an issue. Additionally, the imp
 * E-mail notification feature: Ioana
 * Test-task feature: Alex and Joaquin
 * Refactoring: Ioana
-* readme: Theodor and Joaquin
+* readme: Theodor, Johan and Joaquin
